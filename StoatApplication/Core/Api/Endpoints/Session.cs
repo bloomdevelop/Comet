@@ -7,7 +7,7 @@ namespace StoatApplication.Core.Api.Endpoints;
 
 public abstract class Session
 {
-    private static readonly string Url = Root.ApiUrl;
+    private const string Url = Root.ApiUrl;
     private static readonly HttpClient Client = Root.Client;
 
     public static async Task<Auth.LoginResponse?> Login(string email, string password, string? friendlyName = null)
