@@ -1,5 +1,7 @@
-﻿using Avalonia;
-using System;
+﻿using System;
+using Avalonia;
+using Microsoft.Extensions.Logging;
+using StoatApplication.Core.Logging;
 
 namespace StoatApplication;
 
@@ -9,8 +11,22 @@ class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        // Initialize application logging
+        Logger.Initialize(builder =>
+        {
+            builder
+                .AddConsole()
+                .AddDebug()
+                .SetMinimumLevel(LogLevel.Information);
+        });
+
+        var log = Logger.Create<Program>();
+        log.LogInformation("Starting StoatApplication");
+
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()

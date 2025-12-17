@@ -2,7 +2,9 @@ using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using StoatApplication.Core.Api.Endpoints;
+using StoatApplication.Core.Logging;
 using Websocket.Client;
 
 namespace StoatApplication.Core.WebSocket;
@@ -14,6 +16,8 @@ public sealed class WebSocketClient(Uri serverUrl) : IAsyncDisposable
         ReconnectTimeout = TimeSpan.FromSeconds(10)
     };
 
+    private readonly ILogger<WebSocketClient> _logger = Logger.Create<WebSocketClient>();
+
     public async ValueTask DisposeAsync()
     {
         if (_client.IsStarted)
@@ -24,6 +28,8 @@ public sealed class WebSocketClient(Uri serverUrl) : IAsyncDisposable
 
     public static async Task<WebSocketClient> CreateFromConfigAsync(CancellationToken ct = default)
     {
+        var log = Logger.Create<WebSocketClient>();
+        log.LogInformation("Creating WebSocketClient from server configuration");
         var config = await Root.GetServerConfiguration();
         ct.ThrowIfCancellationRequested();
 
@@ -34,8 +40,9 @@ public sealed class WebSocketClient(Uri serverUrl) : IAsyncDisposable
     {
         if (_client.IsStarted)
             return;
-
+        _logger.LogInformation("Starting WebSocket connection to {Url}", _client.Url);
         await _client.Start().ConfigureAwait(false);
+        _logger.LogInformation("WebSocket connected");
         ct.ThrowIfCancellationRequested();
     }
 
@@ -43,7 +50,8 @@ public sealed class WebSocketClient(Uri serverUrl) : IAsyncDisposable
     {
         if (!_client.IsStarted)
             return;
-
+        _logger.LogInformation("Stopping WebSocket connection");
         await _client.Stop(WebSocketCloseStatus.NormalClosure, "Disconnected Manually").ConfigureAwait(false);
+        _logger.LogInformation("WebSocket disconnected");
     }
 }
