@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using StoatApplication.Core.Api.Endpoints;
 using Websocket.Client;
 
-namespace StoatApplication.Core;
+namespace StoatApplication.Core.WebSocket;
 
-public sealed class WebSocket(Uri serverUrl) : IAsyncDisposable
+public sealed class WebSocketClient(Uri serverUrl) : IAsyncDisposable
 {
     private readonly WebsocketClient _client = new(serverUrl)
     {
@@ -22,12 +22,12 @@ public sealed class WebSocket(Uri serverUrl) : IAsyncDisposable
         _client.Dispose();
     }
 
-    public static async Task<WebSocket> CreateFromConfigAsync(CancellationToken ct = default)
+    public static async Task<WebSocketClient> CreateFromConfigAsync(CancellationToken ct = default)
     {
         var config = await Root.GetServerConfiguration();
         ct.ThrowIfCancellationRequested();
 
-        return new WebSocket(new Uri(config.WebSocketUrl));
+        return new WebSocketClient(new Uri(config.WebSocketUrl));
     }
 
     public async Task ConnectAsync(CancellationToken ct = default)
