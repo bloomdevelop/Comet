@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace StoatApplication.Core.Api.Endpoints;
 
-public class Root
+public abstract class Root
 {
     private static readonly JsonSerializerOptions Options = new() { PropertyNameCaseInsensitive = true };
-    
+
     // TODO: Implement custom instance
     public static readonly string ApiUrl = "https://stoat.chat/api";
     public static readonly HttpClient Client = new();
-    
+
     public static async Task<Models.Root> GetServerConfiguration()
     {
         var json = await Client.GetStringAsync($"{ApiUrl}/");

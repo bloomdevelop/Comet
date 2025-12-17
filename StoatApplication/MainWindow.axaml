@@ -5,8 +5,15 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="StoatApplication.MainWindow"
         Title="StoatApplication">
-    <StackPanel Orientation="Vertical">
-        <Label Name="Label">Click the button to fetch server configuration</Label>
-        <Button Click="Button_GetServerConfiguration">Get Server Configuration</Button>
+    <StackPanel Spacing="12" Orientation="Vertical">
+        <StackPanel Spacing="5">
+            <TextBox Name="TextBoxEmail" Watermark="Email" />
+            <TextBox Name="TextBoxPassword" Watermark="Password" PasswordChar="*" />
+            <Button Click="Button_Login">Login</Button>
+        </StackPanel>
+        <StackPanel Spacing="5">
+            <Label Name="Label">Click the button to fetch server configuration</Label>
+            <Button Click="Button_GetServerConfiguration">Get Server Configuration</Button>
+        </StackPanel>
     </StackPanel>
 </Window>
