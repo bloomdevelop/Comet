@@ -30,8 +30,7 @@ public sealed record Features(
 public sealed record CaptchaFeature(
     [property: JsonPropertyName("enabled")]
     bool IsEnabled,
-    [property: JsonPropertyName("key")]
-    string Key
+    [property: JsonPropertyName("key")] string Key
 );
 
 public sealed record AutumnFeature(
