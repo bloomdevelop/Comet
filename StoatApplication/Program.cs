@@ -5,7 +5,7 @@ using StoatApplication.Core.Logging;
 
 namespace StoatApplication;
 
-class Program
+internal class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -13,14 +13,7 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        // Initialize application logging
-        Logger.Initialize(builder =>
-        {
-            builder
-                .AddConsole()
-                .AddDebug()
-                .SetMinimumLevel(LogLevel.Information);
-        });
+        BuildAvaloniaApp();
 
         var log = Logger.Create<Program>();
         log.LogInformation("Starting StoatApplication");
@@ -30,8 +23,16 @@ class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        Logger.Initialize(builder => builder
+            .AddConsole()
+            .AddDebug()
+            .SetMinimumLevel(LogLevel.Information)
+        );
+
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+    }
 }

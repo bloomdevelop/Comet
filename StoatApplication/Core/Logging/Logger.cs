@@ -1,11 +1,12 @@
 using System;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace StoatApplication.Core.Logging;
 
 public static class Logger
 {
-    private static readonly object Sync = new();
+    private static readonly Lock Sync = new();
     private static ILoggerFactory? _factory;
 
     public static void Initialize(Action<ILoggingBuilder> configure)
@@ -15,7 +16,7 @@ public static class Logger
 
         lock (Sync)
         {
-            if (_factory == null) _factory = LoggerFactory.Create(configure);
+            _factory ??= LoggerFactory.Create(configure);
         }
     }
 

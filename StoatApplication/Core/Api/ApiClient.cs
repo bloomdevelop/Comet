@@ -12,7 +12,7 @@ public abstract class ApiClient
     public static readonly JsonSerializerOptions Options = new() { PropertyNameCaseInsensitive = true };
     public static readonly HttpClient Client = new();
 
-    public async Task LoginAsync(string email, string password)
+    public static async Task LoginAsync(string email, string password)
     {
         var response = await Session.Login(email, password);
 
