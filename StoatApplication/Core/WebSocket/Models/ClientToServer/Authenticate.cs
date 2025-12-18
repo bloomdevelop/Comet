@@ -13,7 +13,7 @@ namespace StoatApplication.Core.WebSocket.Models.ClientToServer;
 /// </remarks>
 public sealed record Authenticate(
     [property: JsonPropertyName("token")] string Token
-) : IStoatEvent
+) : IEvent
 {
     /// <summary>
     ///     Gets the type of the event associated with the object.

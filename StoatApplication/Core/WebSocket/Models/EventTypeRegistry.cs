@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace StoatApplication.Core.WebSocket.Models;
 
-public static class StoatEventTypeRegistry
+public static class EventTypeRegistry
 {
     private static readonly Dictionary<string, Type> Map = new(StringComparer.Ordinal);
 
-    public static void Register<TEvent>(string type) where TEvent : IStoatEvent
+    public static void Register<TEvent>(string type) where TEvent : IEvent
     {
         Map[type] = typeof(TEvent);
     }

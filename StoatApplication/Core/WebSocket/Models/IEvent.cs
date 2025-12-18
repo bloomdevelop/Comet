@@ -5,7 +5,7 @@ namespace StoatApplication.Core.WebSocket.Models;
 /// <summary>
 ///     Base interface for any websocket event (client->server or server->client).
 /// </summary>
-public interface IStoatEvent
+public interface IEvent
 {
     string Type { get; }
 }
@@ -15,4 +15,4 @@ public interface IStoatEvent
 /// </summary>
 /// <param name="Type">Event Type</param>
 /// <param name="Raw">Raw Json Data </param>
-public sealed record UnknownStoatEvent(string Type, JsonElement Raw) : IStoatEvent;
+public sealed record UnknownEvent(string Type, JsonElement Raw) : IEvent;

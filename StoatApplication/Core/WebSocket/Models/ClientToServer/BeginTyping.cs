@@ -5,7 +5,7 @@ namespace StoatApplication.Core.WebSocket.Models.ClientToServer;
 public sealed record BeginTyping(
     [property: JsonPropertyName("channel")]
     string ChannelId
-) : IStoatEvent
+) : IEvent
 {
     public string Type => "BeginTyping";
 }

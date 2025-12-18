@@ -4,7 +4,7 @@ namespace StoatApplication.Core.WebSocket.Models.ServerToClient;
 
 public sealed record Error(
     [property: JsonPropertyName("error")] string ErrorId
-) : IStoatEvent
+) : IEvent
 {
     public string Type => "Error";
 }

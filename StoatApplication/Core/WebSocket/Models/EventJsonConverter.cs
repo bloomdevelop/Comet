@@ -10,9 +10,9 @@ namespace StoatApplication.Core.WebSocket.Models;
 ///     OR (common in gateways) { "t": "...", "d": { ... } }
 ///     Falls back to UnknownStoatEvent if the type isn't registered.
 /// </summary>
-public sealed class StoatEventJsonConverter : JsonConverter<IStoatEvent>
+public sealed class EventJsonConverter : JsonConverter<IEvent>
 {
-    public override IStoatEvent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IEvent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
@@ -23,25 +23,25 @@ public sealed class StoatEventJsonConverter : JsonConverter<IStoatEvent>
 
         var data = TryGetElement(root, "data") ?? TryGetElement(root, "d");
 
-        if (StoatEventTypeRegistry.TryResolve(type, out var clrType) && clrType is not null)
+        if (EventTypeRegistry.TryResolve(type, out var clrType) && clrType is not null)
         {
             if (data is null)
             {
                 // Some events may not carry a payload.
                 // Try to deserialize from the whole root if the event model expects it.
-                var deserialized = (IStoatEvent?)JsonSerializer.Deserialize(root.GetRawText(), clrType, options);
-                return deserialized ?? new UnknownStoatEvent(type, root);
+                var deserialized = (IEvent?)JsonSerializer.Deserialize(root.GetRawText(), clrType, options);
+                return deserialized ?? new UnknownEvent(type, root);
             }
 
             // Most protocols put the payload under data/d; deserialize that into the concrete event type.
-            var evt = (IStoatEvent?)JsonSerializer.Deserialize(data.Value.GetRawText(), clrType, options);
-            return evt ?? new UnknownStoatEvent(type, root);
+            var evt = (IEvent?)JsonSerializer.Deserialize(data.Value.GetRawText(), clrType, options);
+            return evt ?? new UnknownEvent(type, root);
         }
 
-        return new UnknownStoatEvent(type, root);
+        return new UnknownEvent(type, root);
     }
 
-    public override void Write(Utf8JsonWriter writer, IStoatEvent value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, IEvent value, JsonSerializerOptions options)
     {
         // Serialize as { "type": "...", "data": { ...event... } } by default.
         writer.WriteStartObject();
