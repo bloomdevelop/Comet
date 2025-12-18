@@ -1,18 +1,15 @@
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using StoatApplication.Core.Api.Models;
+using static StoatApplication.Core.Api.ApiClient;
 
 namespace StoatApplication.Core.Api.Endpoints;
 
 public abstract class Session
 {
-    private const string Url = Root.ApiUrl;
-    private static readonly HttpClient Client = Root.Client;
-
     public static async Task<Auth.LoginResponse?> Login(string email, string password, string? friendlyName = null)
     {
-        var response = await Client.PostAsJsonAsync($"{Url}/auth/session/login",
+        var response = await Client.PostAsJsonAsync($"{ApiUrl}/auth/session/login",
             new
             {
                 email,
