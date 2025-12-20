@@ -15,9 +15,9 @@ public abstract record Auth
     /// <param name="LastSeen">When the session was last logged in (iso8601 timestamp)</param>
     /// <param name="Origin">
     ///     What is the session origin? This could be used to differentiate sessions that come from
-    ///     staging/test vs prod, etc. Authifier will set this to None by default. The application must fill it in.
+    ///     staging/test vs. prod, etc. Authifier will set this to None by default. The application must fill it in.
     /// </param>
-    /// <param name="Subscription">Web Push Subcription</param>
+    /// <param name="Subscription">Web Push Subscription</param>
     public sealed record LoginResponse(
         [property: JsonPropertyName("result")] string Result,
         [property: JsonPropertyName("_id")] string Id,
@@ -33,7 +33,7 @@ public abstract record Auth
     );
 
     /// <summary>
-    ///     Web Push Subcription
+    ///     Web Push Subscription
     /// </summary>
     /// <param name="Endpoint">Not Documented</param>
     /// <param name="P256dh">Not Documented</param>
@@ -48,7 +48,7 @@ public abstract record Auth
     /// <summary>
     ///     Information about a specific session
     /// </summary>
-    /// <param name="Id">Session Id</param>
+    /// <param name="Id">Session ID</param>
     /// <param name="Name">Session Name</param>
     public sealed record Session(
         [property: JsonPropertyName("_id")] string Id,

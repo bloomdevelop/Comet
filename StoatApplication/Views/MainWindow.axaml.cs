@@ -2,10 +2,9 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using StoatApplication.Core.Api;
-using StoatApplication.Core.Utils;
 using Root = StoatApplication.Core.Api.Endpoints.Root;
 
-namespace StoatApplication;
+namespace StoatApplication.Views;
 
 public partial class MainWindow : Window
 {
