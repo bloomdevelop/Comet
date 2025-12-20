@@ -5,6 +5,7 @@
       <map>
         <entry key="StoatApplication/App.axaml" value="StoatApplication/StoatApplication.csproj" />
         <entry key="StoatApplication/MainWindow.axaml" value="StoatApplication/StoatApplication.csproj" />
+        <entry key="StoatApplication/Views/MainWindow.axaml" value="StoatApplication/StoatApplication.csproj" />
       </map>
     </option>
   </component>
