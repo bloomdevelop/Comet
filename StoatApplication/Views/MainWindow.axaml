@@ -15,5 +15,7 @@
             <Label Name="Label">Click the button to fetch server configuration</Label>
             <Button Click="Button_GetServerConfiguration">Get Server Configuration</Button>
         </StackPanel>
+        <StackPanel Spacing="5">
+        </StackPanel>
     </StackPanel>
 </Window>

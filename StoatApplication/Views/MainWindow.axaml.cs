@@ -61,7 +61,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            Label.Content = ex.Message;
+            throw new Exception("Failed to clear session", ex);
         }
     }
 }
