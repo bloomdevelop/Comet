@@ -39,10 +39,7 @@ public partial class LoginWindow : Window
                 LoginButton.IsEnabled = false;
                 await ApiClient.LoginAsync(email, password);
                 LoginButton.IsEnabled = true;
-
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
-                Close();
+                // TODO: Redirect to MainWindow once logged in and connect
             }
             catch (Exception ex)
             {
