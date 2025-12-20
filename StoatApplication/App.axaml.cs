@@ -10,6 +10,8 @@ namespace StoatApplication;
 
 public class App : Application
 {
+    public static WebSocketClient? WebSocket { get; private set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

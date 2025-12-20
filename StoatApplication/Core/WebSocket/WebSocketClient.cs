@@ -1,30 +1,83 @@
 using System;
 using System.Net.WebSockets;
+using System.Reactive.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StoatApplication.Core.Api.Endpoints;
 using StoatApplication.Core.Logging;
+using StoatApplication.Core.WebSocket.Models;
+using StoatApplication.Core.WebSocket.Models.ClientToServer;
+using StoatApplication.Core.WebSocket.Models.ServerToClient;
 using Websocket.Client;
 
 namespace StoatApplication.Core.WebSocket;
 
-public sealed class WebSocketClient(Uri serverUrl) : IAsyncDisposable
+public sealed class WebSocketClient : IAsyncDisposable
 {
-    private readonly WebsocketClient _client = new(serverUrl)
-    {
-        ReconnectTimeout = TimeSpan.FromSeconds(10)
-    };
-
+    private readonly WebsocketClient _client;
     private readonly ILogger<WebSocketClient> _logger = Logger.Create<WebSocketClient>();
+    private IDisposable? _messageSubscription;
+
+    static WebSocketClient()
+    {
+        // Register Server to Client events
+        EventTypeRegistry.Register<Authenticated>("Authenticated");
+        EventTypeRegistry.Register<Error>("Error");
+        EventTypeRegistry.Register<LoggedOut>("LoggedOut");
+        EventTypeRegistry.Register<Message>("Message");
+        EventTypeRegistry.Register<Pong>("Pong");
+
+        // Register Client to Server events (for serialization/deserialization)
+        EventTypeRegistry.Register<Authenticate>("Authenticate");
+        EventTypeRegistry.Register<BeginTyping>("BeginTyping");
+        EventTypeRegistry.Register<EndTyping>("EndTyping");
+        EventTypeRegistry.Register<Ping>("Ping");
+    }
+
+    public WebSocketClient(Uri serverUrl)
+    {
+        _client = new WebsocketClient(serverUrl)
+        {
+            ReconnectTimeout = TimeSpan.FromSeconds(10)
+        };
+
+        _messageSubscription = _client.MessageReceived
+            .Where(msg => msg.MessageType == WebSocketMessageType.Text)
+            .Select(msg =>
+            {
+                _logger.LogDebug("Received raw message: {Message}", msg.Text);
+                try
+                {
+                    return JsonSerializer.Deserialize<IEvent>(msg.Text!, EventJson.WebSocketOptions);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to deserialize message: {Message}", msg.Text);
+                    return null;
+                }
+            })
+            .Where(evt => evt != null)
+            .Subscribe(evt =>
+            {
+                _logger.LogInformation("Received event: {Type}", evt!.Type);
+                OnEventReceived?.Invoke(evt);
+            });
+    }
 
     public async ValueTask DisposeAsync()
     {
+        _messageSubscription?.Dispose();
+        _messageSubscription = null;
+
         if (_client.IsStarted)
             await DisconnectAsync().ConfigureAwait(false);
 
         _client.Dispose();
     }
+
+    public event Action<IEvent>? OnEventReceived;
 
     public static async Task<WebSocketClient> CreateFromConfigAsync(CancellationToken ct = default)
     {
