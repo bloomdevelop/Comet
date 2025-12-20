@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -13,7 +12,7 @@ namespace StoatApplication;
 
 public class App : Application
 {
-    public static WebSocketClient? WebSocket { get; private set; }
+    public static WebSocketClient? WebSocket { get; set; }
 
     public override void Initialize()
     {
@@ -56,19 +55,6 @@ public class App : Application
                 desktop.MainWindow = new MainWindow();
                 log.LogInformation("MainWindow created");
                 log.LogInformation("Session restored for user: {User}", session.Name);
-
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        WebSocket = await WebSocketClient.CreateFromConfigAsync();
-                        await WebSocket.ConnectAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        log.LogError(ex, "Failed to connect to WebSocket");
-                    }
-                });
             }
             else
             {
