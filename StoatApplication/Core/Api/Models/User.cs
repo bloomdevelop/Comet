@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace StoatApplication.Core.Api.Models;
 
-public abstract record User(
+public sealed record User(
     [property: JsonPropertyName("_id")] string Id,
     [property: JsonPropertyName("username")]
     string Username,
@@ -22,7 +22,7 @@ public abstract record User(
     [property: JsonPropertyName("online")] bool IsOnline
 );
 
-public abstract record UserAvatar(
+public sealed record UserAvatar(
     [property: JsonPropertyName("_id")] string Id,
     [property: JsonPropertyName("tag")] string Tag,
     [property: JsonPropertyName("filename")]
@@ -46,21 +46,21 @@ public abstract record UserAvatar(
     List<UserRelations> Relations
 );
 
-public abstract record UserAvatarMetadata(
+public sealed record UserAvatarMetadata(
     [property: JsonPropertyName("type")] string Type
 );
 
-public abstract record UserRelations(
+public sealed record UserRelations(
     [property: JsonPropertyName("_id")] string Id,
     [property: JsonPropertyName("status")] string Status
 );
 
-public abstract record UserStatus(
+public sealed record UserStatus(
     [property: JsonPropertyName("text")] string? Text,
     [property: JsonPropertyName("presence")]
     UserPresence Presence
 );
 
-public abstract record UserBot(
+public sealed record UserBot(
     [property: JsonPropertyName("owner")] string Owner
 );

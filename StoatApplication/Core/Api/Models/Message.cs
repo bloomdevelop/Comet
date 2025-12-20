@@ -30,18 +30,18 @@ public sealed record Message(
     Dictionary<string, List<string>>? Reactions
 );
 
-public abstract record MessageWebhook(
+public sealed record MessageWebhook(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("avatar")] string AvatarUrl
 );
 
-public abstract record SystemMessage(
+public sealed record SystemMessage(
     [property: JsonPropertyName("type")] string Type,
     [property: JsonPropertyName("content")]
     string Content
 );
 
-public abstract record MessageAttachment(
+public sealed record MessageAttachment(
     [property: JsonPropertyName("_id")] string Id,
     [property: JsonPropertyName("tag")] string Tag,
     [property: JsonPropertyName("filename")]
@@ -63,7 +63,7 @@ public abstract record MessageAttachment(
     string? ObjectId
 );
 
-public abstract record MessageAttachmentMetadata(
+public sealed record MessageAttachmentMetadata(
     [property: JsonPropertyName("type")] string Type
 );
 

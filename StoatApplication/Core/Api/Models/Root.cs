@@ -14,7 +14,7 @@ public sealed record Root(
     [property: JsonPropertyName("build")] Build Build
 );
 
-public abstract record Features(
+public sealed record Features(
     [property: JsonPropertyName("captcha")]
     CaptchaFeature Captcha,
     [property: JsonPropertyName("email")] bool IsEmailEnabled,
@@ -27,31 +27,31 @@ public abstract record Features(
     LiveKitFeature LiveKit
 );
 
-public abstract record CaptchaFeature(
+public sealed record CaptchaFeature(
     [property: JsonPropertyName("enabled")]
     bool IsEnabled,
     [property: JsonPropertyName("key")] string Key
 );
 
-public abstract record AutumnFeature(
+public sealed record AutumnFeature(
     [property: JsonPropertyName("enabled")]
     bool IsEnabled,
     [property: JsonPropertyName("url")] string Url
 );
 
-public abstract record JanuaryFeature(
+public sealed record JanuaryFeature(
     [property: JsonPropertyName("enabled")]
     bool IsEnabled,
     [property: JsonPropertyName("url")] string Url
 );
 
-public abstract record LiveKitFeature(
+public sealed record LiveKitFeature(
     [property: JsonPropertyName("enabled")]
     bool IsEnabled,
     [property: JsonPropertyName("nodes")] List<LiveKitNode> Nodes
 );
 
-public abstract record LiveKitNode(
+public sealed record LiveKitNode(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("lat")] double Latitude,
     [property: JsonPropertyName("lon")] double Longitude,
@@ -59,7 +59,7 @@ public abstract record LiveKitNode(
     string Url
 );
 
-public abstract record Build(
+public sealed record Build(
     [property: JsonPropertyName("commit_sha")]
     string CommitSha,
     [property: JsonPropertyName("commit_timestamp")]
