@@ -61,7 +61,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            SessionManager.ClearSession();
+            SessionManager.ClearSessionSync();
         }
         catch (Exception ex)
         {

@@ -9,6 +9,12 @@ using StoatApplication.Core.Utils;
 
 namespace StoatApplication.Core.Api;
 
+/*
+ * This is bullshit since there's no way to securely store the session token without
+ * anyone attempting to steal the token. :(
+ *
+ * For now I'll keep investigating until I find a good way to handle this.
+ */
 public static class SessionManager
 {
     public static Auth.LoginResponse? CurrentSession { get; private set; }
@@ -18,7 +24,7 @@ public static class SessionManager
     /// </summary>
     /// <param name="session">The session object containing authentication details to be saved.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public static async Task SaveSession(Auth.LoginResponse session)
+    public static async Task SaveSessionAsync(Auth.LoginResponse session)
     {
         var log = Logger.Create("SessionManager");
 
@@ -85,7 +91,7 @@ public static class SessionManager
     ///     Clears the current session by resetting the session object to null and deleting the persisted session file if it
     ///     exists.
     /// </summary>
-    public static void ClearSession()
+    public static void ClearSessionSync()
     {
         CurrentSession = null;
         var filePath = StorageUtils.GetSessionFilePath();

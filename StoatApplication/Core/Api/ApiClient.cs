@@ -16,6 +16,6 @@ public abstract class ApiClient
     {
         var response = await Session.Login(email, password);
 
-        if (response is not null) await SessionManager.SaveSession(response);
+        if (response is not null) await SessionManager.SaveSessionAsync(response);
     }
 }
