@@ -5,9 +5,9 @@ namespace StoatApplication.Core.Utils;
 
 public static class StorageUtils
 {
-    private const string AppName = "StoatApplication";
+    private const string AppName = "Comet";
 
-    private static string GetConfigDirectory()
+    public static string GetLocalDataPath()
     {
         var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppName);
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -17,6 +17,6 @@ public static class StorageUtils
 
     public static string GetSessionFilePath()
     {
-        return Path.Combine(GetConfigDirectory(), "session.json");
+        return Path.Combine(GetLocalDataPath(), "session.json");
     }
 }
