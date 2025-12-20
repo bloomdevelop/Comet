@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using StoatApplication.Core.Api;
 using StoatApplication.Core.Api.Endpoints;
 using StoatApplication.Core.Logging;
 using StoatApplication.Core.WebSocket.Models;
@@ -37,7 +36,7 @@ public sealed class WebSocketClient : IAsyncDisposable
         EventTypeRegistry.Register<Ping>("Ping");
     }
 
-    private WebSocketClient(Uri serverUrl)
+    public WebSocketClient(Uri serverUrl)
     {
         _client = new WebsocketClient(serverUrl)
         {
@@ -86,9 +85,8 @@ public sealed class WebSocketClient : IAsyncDisposable
         log.LogInformation("Creating WebSocketClient from server configuration");
         var config = await Root.GetServerConfiguration();
         ct.ThrowIfCancellationRequested();
-        var token = SessionManager.CurrentSession?.Token;
 
-        return new WebSocketClient(new Uri($"{config.WebSocketUrl}?version=1&format=json&token={token}"));
+        return new WebSocketClient(new Uri(config.WebSocketUrl));
     }
 
     public async Task ConnectAsync(CancellationToken ct = default)
