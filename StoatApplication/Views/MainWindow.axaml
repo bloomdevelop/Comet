@@ -3,19 +3,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="StoatApplication.MainWindow"
+        x:Class="StoatApplication.Views.MainWindow"
         Title="StoatApplication">
-    <StackPanel Spacing="12" Orientation="Vertical">
-        <StackPanel Spacing="5">
-            <TextBox Name="TextBoxEmail" Watermark="Email" />
-            <TextBox Name="TextBoxPassword" Watermark="Password" PasswordChar="*" />
-            <Button Click="Button_Login">Login</Button>
-        </StackPanel>
+    <StackPanel Margin="50" Spacing="12" Orientation="Vertical">
         <StackPanel Spacing="5">
             <Label Name="Label">Click the button to fetch server configuration</Label>
             <Button Click="Button_GetServerConfiguration">Get Server Configuration</Button>
         </StackPanel>
         <StackPanel Spacing="5">
+            <Label>Press this button to clear session.</Label>
+            <Button Click="Button_ClearSession">Clear Session </Button>
+        </StackPanel>
+        <StackPanel Spacing="5">
+            <Label>Press this button to connect to Stoat's Websocket</Label>
+            <Button>Connect</Button>
         </StackPanel>
     </StackPanel>
 </Window>

@@ -29,35 +29,11 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void Button_Login(object? sender, RoutedEventArgs e)
+    private void Button_ClearSession(object? sender, RoutedEventArgs e)
     {
         try
         {
-            var email = TextBoxEmail.Text?.Trim() ?? string.Empty;
-            var password = TextBoxPassword.Text ?? string.Empty;
-
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-            {
-                Label.Content = "Email and password cannot be empty and is required.";
-                return;
-            }
-
-            if (!RegexUtilties.IsValidEmail(email))
-            {
-                Label.Content = "Invalid email address.";
-                return;
-            }
-
-            try
-            {
-                Label.Content = "Logging in...";
-                await ApiClient.LoginAsync(email, password);
-                Label.Content = "Login successful!";
-            }
-            catch (Exception ex)
-            {
-                Label.Content = $"Error: {ex.Message}";
-            }
+            SessionManager.ClearSession();
         }
         catch (Exception ex)
         {
