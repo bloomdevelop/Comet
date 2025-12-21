@@ -20,6 +20,7 @@ public sealed class WebSocketClient : IAsyncDisposable
     private readonly WebsocketClient _client;
     private readonly ILogger<WebSocketClient> _logger = Logger.Create<WebSocketClient>();
     private IDisposable? _messageSubscription;
+    private IDisposable? _pingSubscription;
 
     static WebSocketClient()
     {
@@ -29,6 +30,7 @@ public sealed class WebSocketClient : IAsyncDisposable
         EventTypeRegistry.Register<LoggedOut>("LoggedOut");
         EventTypeRegistry.Register<Message>("Message");
         EventTypeRegistry.Register<Pong>("Pong");
+        EventTypeRegistry.Register<Ready>("Ready");
 
         // Register Client to Server events (for serialization/deserialization)
         EventTypeRegistry.Register<Authenticate>("Authenticate");
@@ -65,17 +67,32 @@ public sealed class WebSocketClient : IAsyncDisposable
                 _logger.LogInformation("Received event: {Type}", evt!.Type);
                 OnEventReceived?.Invoke(evt);
             });
+        _pingSubscription = Observable.Interval(TimeSpan.FromSeconds(10))
+            .Subscribe(_ => SendPing());
     }
 
     public async ValueTask DisposeAsync()
     {
         _messageSubscription?.Dispose();
         _messageSubscription = null;
+        _pingSubscription?.Dispose();
+        _pingSubscription = null;
 
         if (_client.IsStarted)
             await DisconnectAsync().ConfigureAwait(false);
 
         _client.Dispose();
+    }
+
+    private void SendPing()
+    {
+        if (!_client.IsStarted) return;
+
+        var pingEvent = new Ping(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+        var json = JsonSerializer.Serialize(pingEvent, EventJson.WebSocketOptions);
+
+        _logger.LogDebug("Sending ping: {Json}", json);
+        _client.Send(json);
     }
 
     public event Action<IEvent>? OnEventReceived;
