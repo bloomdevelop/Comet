@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace StoatApplication.Core.Utils;
 
-public abstract class RegexUtilties
+public abstract class RegexUtils
 {
     /// <summary>
     ///     Validates whether the provided string is a valid email address format.

@@ -27,7 +27,7 @@ public partial class LoginWindow : Window
                 return;
             }
 
-            if (!RegexUtilties.IsValidEmail(email))
+            if (!RegexUtils.IsValidEmail(email))
             {
                 ErrorMessage.Content = "Invalid email address.";
                 ErrorBorder.IsVisible = true;
