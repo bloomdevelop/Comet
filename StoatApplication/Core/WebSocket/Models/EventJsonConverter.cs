@@ -23,19 +23,34 @@ public sealed class EventJsonConverter : JsonConverter<IEvent>
 
         var data = TryGetElement(root, "data") ?? TryGetElement(root, "d");
 
-        if (EventTypeRegistry.TryResolve(type, out var clrType) && clrType is not null)
-        {
-            if (data is null)
-            {
-                // Some events may not carry a payload.
-                // Try to deserialize from the whole root if the event model expects it.
-                var deserialized = (IEvent?)JsonSerializer.Deserialize(root.GetRawText(), clrType, options);
-                return deserialized ?? new UnknownEvent(type, root);
-            }
+        if (!EventTypeRegistry.TryResolve(type, out var clrType) || clrType is null)
+            return new UnknownEvent(type, root);
 
-            // Most protocols put the payload under data/d; deserialize that into the concrete event type.
+        if (data is null || data.Value.ValueKind == JsonValueKind.Null)
+        {
+            // If there is no data, try to create an instance of the event type.
+            // This handles events like "Pong" which might be just { "type": "pong" }
+            try
+            {
+                return (IEvent)Activator.CreateInstance(clrType)!;
+            }
+            catch
+            {
+                return new UnknownEvent(type, root);
+            }
+        }
+
+        // Most protocols put the payload under data/d; deserialize that into the concrete event type.
+        try
+        {
             var evt = (IEvent?)JsonSerializer.Deserialize(data.Value.GetRawText(), clrType, options);
             return evt ?? new UnknownEvent(type, root);
+        }
+        catch (JsonException)
+        {
+            // If deserializing the 'data' fragment fails (e.g., data is a primitive but clrType is an object),
+            // fallback to an UnknownEvent or try to instantiate the type directly if it's a simple signal.
+            return new UnknownEvent(type, root);
         }
 
         return new UnknownEvent(type, root);
