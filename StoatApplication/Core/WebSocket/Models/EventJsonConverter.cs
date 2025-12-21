@@ -52,8 +52,6 @@ public sealed class EventJsonConverter : JsonConverter<IEvent>
             // fallback to an UnknownEvent or try to instantiate the type directly if it's a simple signal.
             return new UnknownEvent(type, root);
         }
-
-        return new UnknownEvent(type, root);
     }
 
     public override void Write(Utf8JsonWriter writer, IEvent value, JsonSerializerOptions options)
